@@ -1,7 +1,8 @@
 // generic configuration
 let canvasWidth = 800;
-let canvasHeight = 400;
+let canvasHeight = 800;
 let fr = 30;
+let gridSize = 80;
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
@@ -10,6 +11,7 @@ function setup() {
 
   manager
     .addOperation(function() {
+      grid.init().draw();
       target.draw();
     }, function() {
       return false;
@@ -124,11 +126,33 @@ var manager = {
     }
   }
 };
+  
+var grid = {
+  data: null,
+  init: function() {
+    var cols = Math.round(width/gridSize);
+    var rows = Math.round(height/gridSize);
+    this.data = new Array(rows);
+    for (var i=0; i<rows; i++) {
+      this.data[i]= new Array(cols);
+      for (var j=0; j<cols; j++) {
+        this.data[i][j] = {};
+      }
+    }
+    
+    return this;
+  },
+  draw: function() {
+    for (var i=0; i<this.data.length;i++) {
+      line(0, i*gridSize, width, i*gridSize);
+    }
+    for (i=0; i<this.data[0].length;i++) {
+      line(i*gridSize, 0, i*gridSize, height);
+    }
+  }
+};
 
 function draw() {
   background(255);
   manager.runOperations();
 }
-
-// 0, 0
-// 10, 0
